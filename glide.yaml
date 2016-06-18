@@ -1,0 +1,5 @@
+package: github.com/nirasan/apptime
+import:
+- package: github.com/stretchr/testify
+  subpackages:
+  - assert
