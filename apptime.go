@@ -1,31 +1,38 @@
 package apptime
 
 import (
-    "log"
-    "time"
+	"log"
+	"time"
 )
 
-var timeNowFunc = time.Now
-
-var TimeFormat = "2006-01-02 15:04:05"
-
-func Now() time.Time {
-    return timeNowFunc()
+type Apptime struct {
+	timeFunc func() time.Time
 }
 
-func Set(t time.Time) {
-    timeNowFunc = func() time.Time { return t }
+const TimeFormat = "2006-01-02 15:04:05"
+
+func New() *Apptime {
+	return &Apptime{
+		timeFunc: time.Now,
+	}
 }
 
-func SetByString(s string) {
-    t, e := time.Parse(TimeFormat, s)
-    if e != nil {
-        log.Panic("invalid string: " + s)
-    }
-    Set(t)
+func (a *Apptime) Now() time.Time {
+	return a.timeFunc()
 }
 
-func Reset() {
-    timeNowFunc = time.Now
+func (a *Apptime) Set(t time.Time) {
+	a.timeFunc = func() time.Time { return t }
 }
 
+func (a *Apptime) SetByString(s string) {
+	t, e := time.Parse(TimeFormat, s)
+	if e != nil {
+		log.Panic("invalid string: " + s)
+	}
+	a.Set(t)
+}
+
+func (a *Apptime) Reset() {
+	a.timeFunc = time.Now
+}
